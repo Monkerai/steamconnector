@@ -1,0 +1,57 @@
+<html>
+<head>
+    <title>Joining Server...</title>
+    <style>
+        body {
+            background: #0e0e0e;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 { font-size: 40px; }
+        p { color: #aaa; }
+    </style>
+</head>
+<body>
+
+<div>
+    <h1>Joining Server...</h1>
+    <p id="serverText"></p>
+</div>
+
+<script>
+let path = window.location.pathname;
+
+// Remove leading slash
+if (path.startsWith("/")) {
+    path = path.substring(1);
+}
+
+// If using project page, remove repo name
+const repoName = "steamconnector";
+
+if (path.startsWith(repoName + "/")) {
+    path = path.substring(repoName.length + 1);
+}
+
+if (path) {
+    document.getElementById("serverText").innerText = path;
+
+    const steamLink = "steam://connect/" + path;
+
+    setTimeout(() => {
+        window.location.href = steamLink;
+    }, 500);
+} else {
+    document.body.innerHTML = "<h1>No Server Provided</h1>";
+}
+</script>
+
+</body>
+</html>
