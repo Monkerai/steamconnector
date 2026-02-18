@@ -1,0 +1,99 @@
+<html>
+<head>
+    <title>Joining Server...</title>
+    <style>
+        body {
+            background: #0e0e0e;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 { font-size: 40px; }
+        p { color: #aaa; }
+    </style>
+</head>
+<body>
+
+<div id="content">
+    <h1>Joining Server...</h1>
+    <p id="serverText"></p>
+</div>
+
+<script>
+function isValidIPv4(ip) {
+    const parts = ip.split(".");
+    if (parts.length !== 4) return false;
+
+    for (let part of parts) {
+        if (!/^\d+$/.test(part)) return false;
+        const num = parseInt(part, 10);
+        if (num < 0 || num > 255) return false;
+    }
+
+    return true;
+}
+
+function isValidPort(port) {
+    if (!/^\d+$/.test(port)) return false;
+    const num = parseInt(port, 10);
+    return num >= 1 && num <= 65535;
+}
+
+function showError() {
+    document.getElementById("content").innerHTML = `
+        <h1>Invalid Server Address</h1>
+        <p>Use format: IP:PORT</p>
+    `;
+}
+
+let path = window.location.pathname;
+
+// Remove leading slash
+if (path.startsWith("/")) {
+    path = path.substring(1);
+}
+
+// Remove repo name if using project pages
+const repoName = "steamconnector"; // <-- CHANGE THIS
+if (path.startsWith(repoName + "/")) {
+    path = path.substring(repoName.length + 1);
+}
+
+// Decode
+path = decodeURIComponent(path);
+
+if (path.includes(":")) {
+    const parts = path.split(":");
+    if (parts.length === 2) {
+        const ip = parts[0];
+        const port = parts[1];
+
+        if (isValidIPv4(ip) && isValidPort(port)) {
+
+            document.getElementById("serverText").textContent = ip + ":" + port;
+
+            const steamLink = "steam://connect/" + ip + ":" + port;
+
+            setTimeout(() => {
+                window.location.href = steamLink;
+            }, 500);
+
+        } else {
+            showError();
+        }
+    } else {
+        showError();
+    }
+} else {
+    showError();
+}
+</script>
+
+</body>
+</html>
